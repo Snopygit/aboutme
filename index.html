@@ -159,33 +159,7 @@
             display: none;
         }
 
-        .script-placeholder-content {
-            width: 512px;
-            height: 512px;
-            border-radius: 20px;
-            background: rgba(196, 143, 131, 0.1);
-            border: 2px solid rgba(196, 143, 131, 0.3);
-            margin: 0 auto 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .script-placeholder-content::before {
-            content: "Script Bild\A512×512";
-            white-space: pre;
-            color: rgba(196, 143, 131, 0.8);
-            font-size: 1.1rem;
-            font-weight: 400;
-            text-align: center;
-            line-height: 1.4;
-        }
-
-        .dev-card:hover .profile-placeholder-content,
-        .dev-card:hover .script-placeholder-content {
+        .dev-card:hover .profile-placeholder-content {
             transform: scale(1.05);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
@@ -250,8 +224,7 @@
             }
 
             .profile-placeholder-start,
-            .profile-placeholder-content,
-            .script-placeholder-content {
+            .profile-placeholder-content {
                 width: 300px;
                 height: 300px;
             }
@@ -286,15 +259,13 @@
     <section class="content" id="content">
         <div class="content-container">
             <div class="dev-section">
-                <h2 class="dev-title">dev</h2>
+                <h2 class="dev-title">Flipsy's Community</h2>
                 <div class="dev-card" onclick="window.open('https://discord.gg/BfyXvGxxVG', '_blank')">
                     <div class="card-content">
                         <div class="profile-placeholder-content"></div>
-                        <h3 class="card-title">Entwickler & Designer</h3>
+                        <h3 class="card-title">Admin & Developer</h3>
                         <p class="card-description">
-                            Hier könnte deine Beschreibung stehen. Erzähle von deinen Projekten, 
-                            deiner Leidenschaft für Entwicklung und Design, oder was auch immer 
-                            du über dich mitteilen möchtest.
+                            Admin & Developer in Flipsy's Community Discord für den eigenen Server Bot.
                         </p>
                     </div>
                 </div>
@@ -303,108 +274,6 @@
     </section>
 
     <script>
-        function downloadBotScript() {
-            const scriptContent = `__config() -> {
-    'stay_loaded' -> 'true',
-    'scope' -> 'global',
-    'commands' -> {
-        'gamemode <bot_name> <gamemode>' -> 'changeBotGamemode'
-    },
-    'arguments' -> {
-        'bot_name' -> {
-            'type' -> 'players',
-            'single' -> true,
-            'suggester' -> _(args) -> filter(player('all'), _~'player_type' == 'fake')
-        },
-        'gamemode' -> {
-            'type' -> 'term',
-            'options' -> ['survival', 'creative', 'adventure', 'spectator', 's', 'c', 'a', 'sp'],
-            'case_sensitive' -> false
-        }
-    }
-};
-
-_isBot(player) -> (
-    return(player~'player_type' == 'fake');
-);
-
-_normalizeGamemode(gamemode) -> (
-    gamemode = lower(gamemode);
-    return(if(
-        gamemode == 's' || gamemode == 'survival', 'survival',
-        gamemode == 'c' || gamemode == 'creative', 'creative', 
-        gamemode == 'a' || gamemode == 'adventure', 'adventure',
-        gamemode == 'sp' || gamemode == 'spectator', 'spectator',
-        null
-    ));
-);
-
-_getGamemodeDisplayName(gamemode) -> (
-    return(if(
-        gamemode == 'survival', 'Ãœberleben',
-        gamemode == 'creative', 'Kreativ',
-        gamemode == 'adventure', 'Abenteuer', 
-        gamemode == 'spectator', 'Zuschauer',
-        gamemode
-    ));
-);
-
-changeBotGamemode(bot_name, gamemode) -> (
-    bot = player(bot_name);
-    
-    if(!bot, 
-        print(format('r Fehler: Spieler "' + bot_name + '" wurde nicht gefunden'));
-        return()
-    );
-    
-    if(!_isBot(bot),
-        print(format('r Fehler: "' + bot_name + '" ist kein Carpet-Bot'));
-        return()
-    );
-    
-    normalized_gamemode = _normalizeGamemode(gamemode);
-    if(!normalized_gamemode,
-        print(format('r Fehler: UngÃ¼ltiger Spielmodus "' + gamemode + '"'));
-        print(format('g GÃ¼ltige Spielmodi: survival (s), creative (c), adventure (a), spectator (sp)'));
-        return()
-    );
-    
-    current_gamemode = bot~'gamemode';
-    
-    if(current_gamemode == normalized_gamemode,
-        print(format('y Bot "' + bot_name + '" ist bereits im ' + _getGamemodeDisplayName(normalized_gamemode) + ' Modus'));
-        return()
-    );
-    
-    run(str('gamemode %s %s', normalized_gamemode, bot_name));
-    
-    print(format(
-        'g Spielmodus von Bot "' + bot_name + '" erfolgreich von ' + 
-        _getGamemodeDisplayName(current_gamemode) + ' zu ' + 
-        _getGamemodeDisplayName(normalized_gamemode) + ' geÃ¤ndert'
-    ));
-    
-    logger(str('[BotGamemode] %s hat Bot %s Spielmodus geÃ¤ndert: %s -> %s', 
-        player(), bot_name, current_gamemode, normalized_gamemode));
-);
-
-__on_start() -> (
-    print(format('g Bot Spielmodus-Wechsler erfolgreich geladen'));
-    print(format('g Verwendung: /gamemode <bot_name> <spielmodus>'));
-    print(format('g GÃ¼ltige Spielmodi: survival (s), creative (c), adventure (a), spectator (sp)'));
-);`;
-
-            const blob = new Blob([scriptContent], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'bot.sc';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }
-        
         document.querySelector('.scroll-indicator').addEventListener('click', () => {
             document.getElementById('content').scrollIntoView({
                 behavior: 'smooth'
