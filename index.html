@@ -159,7 +159,33 @@
             display: none;
         }
 
-        .dev-card:hover .profile-placeholder-content {
+        .script-placeholder-content {
+            width: 512px;
+            height: 512px;
+            border-radius: 20px;
+            background: rgba(196, 143, 131, 0.1);
+            border: 2px solid rgba(196, 143, 131, 0.3);
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .script-placeholder-content::before {
+            content: "Script Bild\A512×512";
+            white-space: pre;
+            color: rgba(196, 143, 131, 0.8);
+            font-size: 1.1rem;
+            font-weight: 400;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .dev-card:hover .profile-placeholder-content,
+        .dev-card:hover .script-placeholder-content {
             transform: scale(1.05);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
@@ -184,7 +210,6 @@
             margin: 0 auto;
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -224,7 +249,8 @@
             }
 
             .profile-placeholder-start,
-            .profile-placeholder-content {
+            .profile-placeholder-content,
+            .script-placeholder-content {
                 width: 300px;
                 height: 300px;
             }
@@ -244,7 +270,6 @@
     </style>
 </head>
 <body>
-    <!-- Start Screen -->
     <section class="start-screen" id="start">
         <h1>Snopy</h1>
         <div class="profile-placeholder-start glass-effect">
@@ -255,7 +280,6 @@
         </div>
     </section>
 
-    <!-- Content Section -->
     <section class="content" id="content">
         <div class="content-container">
             <div class="dev-section">
@@ -270,10 +294,125 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="dev-section">
+                <h2 class="dev-title">Script</h2>
+                <div class="dev-card" onclick="downloadBotScript()">
+                    <div class="card-content">
+                        <div class="script-placeholder-content"></div>
+                        <h3 class="card-title">Eigenes Script</h3>
+                        <p class="card-description">
+                            Eigenes Minecraft Script was Spielern erlaubt den gamemode von Carpet Bots ohne OP zu verändern.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <script>
+        function downloadBotScript() {
+            const scriptContent = `__config() -> {
+    'stay_loaded' -> 'true',
+    'scope' -> 'global',
+    'commands' -> {
+        'gamemode <bot_name> <gamemode>' -> 'changeBotGamemode'
+    },
+    'arguments' -> {
+        'bot_name' -> {
+            'type' -> 'players',
+            'single' -> true,
+            'suggester' -> _(args) -> filter(player('all'), _~'player_type' == 'fake')
+        },
+        'gamemode' -> {
+            'type' -> 'term',
+            'options' -> ['survival', 'creative', 'adventure', 'spectator', 's', 'c', 'a', 'sp'],
+            'case_sensitive' -> false
+        }
+    }
+};
+
+_isBot(player) -> (
+    return(player~'player_type' == 'fake');
+);
+
+_normalizeGamemode(gamemode) -> (
+    gamemode = lower(gamemode);
+    return(if(
+        gamemode == 's' || gamemode == 'survival', 'survival',
+        gamemode == 'c' || gamemode == 'creative', 'creative', 
+        gamemode == 'a' || gamemode == 'adventure', 'adventure',
+        gamemode == 'sp' || gamemode == 'spectator', 'spectator',
+        null
+    ));
+);
+
+_getGamemodeDisplayName(gamemode) -> (
+    return(if(
+        gamemode == 'survival', 'Überleben',
+        gamemode == 'creative', 'Kreativ',
+        gamemode == 'adventure', 'Abenteuer', 
+        gamemode == 'spectator', 'Zuschauer',
+        gamemode
+    ));
+);
+
+changeBotGamemode(bot_name, gamemode) -> (
+    bot = player(bot_name);
+    
+    if(!bot, 
+        print(format('r Fehler: Spieler "' + bot_name + '" wurde nicht gefunden'));
+        return()
+    );
+    
+    if(!_isBot(bot),
+        print(format('r Fehler: "' + bot_name + '" ist kein Carpet-Bot'));
+        return()
+    );
+    
+    normalized_gamemode = _normalizeGamemode(gamemode);
+    if(!normalized_gamemode,
+        print(format('r Fehler: Ungültiger Spielmodus "' + gamemode + '"'));
+        print(format('g Gültige Spielmodi: survival (s), creative (c), adventure (a), spectator (sp)'));
+        return()
+    );
+    
+    current_gamemode = bot~'gamemode';
+    
+    if(current_gamemode == normalized_gamemode,
+        print(format('y Bot "' + bot_name + '" ist bereits im ' + _getGamemodeDisplayName(normalized_gamemode) + ' Modus'));
+        return()
+    );
+    
+    run(str('gamemode %s %s', normalized_gamemode, bot_name));
+    
+    print(format(
+        'g Spielmodus von Bot "' + bot_name + '" erfolgreich von ' + 
+        _getGamemodeDisplayName(current_gamemode) + ' zu ' + 
+        _getGamemodeDisplayName(normalized_gamemode) + ' geändert'
+    ));
+    
+    logger(str('[BotGamemode] %s hat Bot %s Spielmodus geändert: %s -> %s', 
+        player(), bot_name, current_gamemode, normalized_gamemode));
+);
+
+__on_start() -> (
+    print(format('g Bot Spielmodus-Wechsler erfolgreich geladen'));
+    print(format('g Verwendung: /gamemode <bot_name> <spielmodus>'));
+    print(format('g Gültige Spielmodi: survival (s), creative (c), adventure (a), spectator (sp)'));
+);`;
+
+            const blob = new Blob([scriptContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'bot.sc';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
         document.querySelector('.scroll-indicator').addEventListener('click', () => {
             document.getElementById('content').scrollIntoView({
                 behavior: 'smooth'
