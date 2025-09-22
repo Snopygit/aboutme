@@ -43,7 +43,9 @@
             width: 512px;
             height: 512px;
             border-radius: 50%;
-            background: rgba(196, 143, 131, 0.1);
+            background-image: url('PFB.png');
+            background-size: cover;
+            background-position: center;
             border: 2px solid rgba(196, 143, 131, 0.3);
             display: flex;
             align-items: center;
@@ -58,13 +60,6 @@
         .profile-placeholder-start:hover {
             transform: scale(1.05);
             border-color: #c48f83;
-        }
-
-        .profile-placeholder-start::before {
-            content: "512×512";
-            color: rgba(196, 143, 131, 0.8);
-            font-size: 1.2rem;
-            font-weight: 300;
         }
 
         .scroll-indicator {
@@ -147,7 +142,9 @@
             width: 512px;
             height: 512px;
             border-radius: 20px;
-            background: linear-gradient(135deg, #c48f83, #a67469);
+            background-image: url('Flipsy.png');
+            background-size: cover;
+            background-position: center;
             margin: 0 auto 2rem;
             display: flex;
             align-items: center;
@@ -158,13 +155,8 @@
         }
 
         .profile-placeholder-content::before {
-            content: "512×512\AProfilbild";
-            white-space: pre;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            font-weight: 400;
-            text-align: center;
-            line-height: 1.4;
+            content: "";
+            display: none;
         }
 
         .dev-card:hover .profile-placeholder-content {
@@ -216,7 +208,16 @@
             }
         }
 
-        /* Responsive */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            background: rgba(196, 143, 131, 0.1);
+            border: 1px solid rgba(196, 143, 131, 0.2);
+        }
+        
         @media (max-width: 768px) {
             .start-screen h1 {
                 font-size: 2.5rem;
@@ -240,17 +241,6 @@
                 padding: 2rem 1rem;
             }
         }
-
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        .glass-effect {
-            backdrop-filter: blur(20px);
-            background: rgba(196, 143, 131, 0.1);
-            border: 1px solid rgba(196, 143, 131, 0.2);
-        }
     </style>
 </head>
 <body>
@@ -267,15 +257,13 @@
     <section class="content" id="content">
         <div class="content-container">
             <div class="dev-section">
-                <h2 class="dev-title">dev</h2>
+                <h2 class="dev-title">Dev</h2>
                 <div class="dev-card">
                     <div class="card-content">
                         <div class="profile-placeholder-content"></div>
                         <h3 class="card-title">Entwickler & Designer</h3>
                         <p class="card-description">
-                            Hier könnte deine Beschreibung stehen. Erzähle von deinen Projekten, 
-                            deiner Leidenschaft für Entwicklung und Design, oder was auch immer 
-                            du über dich mitteilen möchtest.
+                            Discord Dev und Admin auf Flipsy's Community Server mit über 400 Membern. 
                         </p>
                     </div>
                 </div>
@@ -284,21 +272,18 @@
     </section>
 
     <script>
-        // Smooth scroll to content when clicking scroll indicator
         document.querySelector('.scroll-indicator').addEventListener('click', () => {
             document.getElementById('content').scrollIntoView({
                 behavior: 'smooth'
             });
         });
 
-        // Add parallax effect to start screen
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const startScreen = document.querySelector('.start-screen');
             startScreen.style.transform = `translateY(${scrolled * 0.5}px)`;
         });
 
-        // Intersection Observer for animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -313,7 +298,6 @@
             });
         }, observerOptions);
 
-        // Observe elements for scroll animations
         document.addEventListener('DOMContentLoaded', () => {
             const animateElements = document.querySelectorAll('.dev-card');
             animateElements.forEach(el => {
