@@ -145,11 +145,11 @@
             left: 100%;
         }
 
-        .profile-placeholder-content {
+        .script-placeholder-content {
             width: 350px;
             height: 350px;
             border-radius: 20px;
-            background-image: url('Flipsy.png');
+            background-image: url('Script.png');
             background-size: cover;
             background-position: center;
             margin: 0 auto 1.5rem;
@@ -161,17 +161,18 @@
             transition: all 0.3s ease;
         }
 
-        .profile-placeholder-content::before {
+        .script-placeholder-content::before {
             content: "";
             display: none;
         }
 
-        .script-placeholder-content {
+        .takeout-placeholder-content {
             width: 350px;
             height: 350px;
             border-radius: 20px;
-            background: rgba(196, 143, 131, 0.1);
-            border: 2px solid rgba(196, 143, 131, 0.3);
+            background-image: url('TakeItOut.png');
+            background-size: cover;
+            background-position: center;
             margin: 0 auto 1.5rem;
             display: flex;
             align-items: center;
@@ -181,18 +182,13 @@
             transition: all 0.3s ease;
         }
 
-        .script-placeholder-content::before {
-            content: "Script Bild\A350×350";
-            white-space: pre;
-            color: rgba(196, 143, 131, 0.8);
-            font-size: 1rem;
-            font-weight: 400;
-            text-align: center;
-            line-height: 1.4;
+        .takeout-placeholder-content::before {
+            content: "";
+            display: none;
         }
 
-        .dev-card:hover .profile-placeholder-content,
-        .dev-card:hover .script-placeholder-content {
+        .dev-card:hover .script-placeholder-content,
+        .dev-card:hover .takeout-placeholder-content {
             transform: scale(1.05);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
@@ -255,11 +251,20 @@
                 font-size: 2.5rem;
             }
 
-            .profile-placeholder-start,
-            .profile-placeholder-content,
-            .script-placeholder-content {
+            .profile-placeholder-start {
                 width: 300px;
                 height: 300px;
+            }
+
+            .sections-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .script-placeholder-content,
+            .takeout-placeholder-content {
+                width: 280px;
+                height: 280px;
             }
 
             .dev-title {
@@ -267,7 +272,7 @@
             }
 
             .dev-card {
-                padding: 2rem;
+                padding: 1.5rem;
             }
 
             .content {
@@ -289,40 +294,30 @@
 
     <section class="content" id="content">
         <div class="content-container">
-            <div class="dev-section">
-                <h2 class="dev-title">Flipsy's Community</h2>
-                <div class="dev-card" onclick="window.open('https://discord.gg/BfyXvGxxVG', '_blank')">
-                    <div class="card-content">
-                        <div class="profile-placeholder-content"></div>
-                        <h3 class="card-title">Admin & Developer</h3>
-                        <p class="card-description">
-                            Admin & Developer in Flipsy's Community Discord für den eigenen Server Bot.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <div class="sections-grid">
                 <div class="dev-section">
-                <h2 class="dev-title">Script</h2>
-                <div class="dev-card" onclick="downloadBotScript()">
-                    <div class="card-content">
-                        <div class="script-placeholder-content"></div>
-                        <h3 class="card-title">Eigenes Script</h3>
-                        <p class="card-description">
-                            Eigenes Minecraft Script was Spielern erlaubt den gamemode von Carpet Bots ohne OP zu verändern.
-                        </p>
+                    <h2 class="dev-title">Script</h2>
+                    <div class="dev-card" onclick="downloadBotScript()">
+                        <div class="card-content">
+                            <div class="script-placeholder-content"></div>
+                            <h3 class="card-title">Eigenes Script</h3>
+                            <p class="card-description">
+                                Eigenes Minecraft Script was Spielern erlaubt den gamemode von Carpet Bots ohne OP zu verändern.
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-            <div class="dev-section">
-                <h2 class="dev-title">In Arbeit...</h2>
-                <div class="dev-card" onclick="downloadBotScript()">
-                    <div class="card-content">
-                        <div class="script-placeholder-content"></div>
-                        <h3 class="card-title">A Better TakeItOut</h3>
-                        <p class="card-description">
-                            Verbessert die ursprüngliche TakeItOut Mod mit bug fixes, quality updates und mehr!
-                        </p>
+                
+                <div class="dev-section">
+                    <h2 class="dev-title">In Arbeit</h2>
+                    <div class="dev-card">
+                        <div class="card-content">
+                            <div class="takeout-placeholder-content"></div>
+                            <h3 class="card-title">ABetterTakeItOut</h3>
+                            <p class="card-description">
+                                Eine verbesserte Version von der TakeItOutMod, die die Qualität verbessert, Bugs fixed und sie generell verbessert.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
