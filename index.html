@@ -246,6 +246,120 @@
             background: rgba(196, 143, 131, 0.1);
             border: 1px solid rgba(196, 143, 131, 0.2);
         }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .popup-content {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            border: 1px solid rgba(196, 143, 131, 0.2);
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .popup-overlay.active .popup-content {
+            transform: scale(1);
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #c48f83;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .popup-close:hover {
+            background-color: rgba(196, 143, 131, 0.1);
+        }
+
+        .popup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .popup-title {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .popup-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 15px;
+            background-image: url('img/Script.png');
+            background-size: cover;
+            background-position: center;
+            margin: 0 auto 2rem;
+        }
+
+        .popup-description {
+            font-size: 1.1rem;
+            color: #c48f83;
+            text-align: center;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .popup-button {
+            background: rgba(196, 143, 131, 0.1);
+            border: 1px solid rgba(196, 143, 131, 0.3);
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .popup-button:hover {
+            background: rgba(196, 143, 131, 0.2);
+            border-color: #c48f83;
+            transform: translateY(-2px);
+        }
         
         @media (max-width: 768px) {
             .start-screen h1 {
@@ -283,6 +397,23 @@
     </style>
 </head>
 <body>
+    <div class="popup-overlay" id="scriptPopup">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closeScriptPopup()">×</button>
+            <div class="popup-header">
+                <h3 class="popup-title">Script Download</h3>
+                <div class="popup-image"></div>
+                <p class="popup-description">
+                    Wähle die gewünschte Sprache für das Minecraft Script aus:
+                </p>
+            </div>
+            <div class="popup-buttons">
+                <button class="popup-button" onclick="downloadBotScript('german')">Deutsch</button>
+                <button class="popup-button" onclick="downloadBotScript('english')">English</button>
+            </div>
+        </div>
+    </div>
+
     <section class="start-screen" id="start">
         <h1>Snopy</h1>
         <div class="profile-placeholder-start glass-effect">
@@ -298,7 +429,7 @@
             <div class="sections-grid">
                 <div class="dev-section">
                     <h2 class="dev-title">Script</h2>
-                    <div class="dev-card" onclick="downloadBotScript()">
+                    <div class="dev-card" onclick="showScriptPopup()">
                         <div class="card-content">
                             <div class="script-placeholder-content"></div>
                             <h3 class="card-title">Eigenes Script</h3>
@@ -310,7 +441,7 @@
                 </div>
                 
                 <div class="dev-section">
-                    <h2 class="dev-title">In Arbeit...</h2>
+                    <h2 class="dev-title">In Arbeit</h2>
                     <div class="dev-card">
                         <div class="card-content">
                             <div class="takeout-placeholder-content"></div>
@@ -326,8 +457,21 @@
     </section>
 
     <script>
-        function downloadBotScript() {
-            const scriptContent = `__config() -> {
+        function showScriptPopup() {
+            const popup = document.getElementById('scriptPopup');
+            popup.classList.add('active');
+        }
+
+        function closeScriptPopup() {
+            const popup = document.getElementById('scriptPopup');
+            popup.classList.remove('active');
+        }
+
+        function downloadBotScript(language) {
+            let scriptContent = '';
+            
+            if (language === 'german') {
+                scriptContent = `__config() -> {
     'stay_loaded' -> 'true',
     'scope' -> 'global',
     'commands' -> {
@@ -416,6 +560,110 @@ __on_start() -> (
     print(format('g Verwendung: /gamemode <bot_name> <spielmodus>'));
     print(format('g Gültige Spielmodi: survival (s), creative (c), adventure (a), spectator (sp)'));
 );`;
+            } else if (language === 'english') {
+                scriptContent = `__config() -> {
+    'stay_loaded' -> 'true',
+    'scope' -> 'global',
+    'commands' -> {
+        'gamemode <bot_name> <gamemode>' -> 'changeBotGamemode'
+    },
+    'arguments' -> {
+        'bot_name' -> {
+            'type' -> 'players',
+            'single' -> true,
+            'suggester' -> _(args) -> filter(player('all'), _~'player_type' == 'fake')
+        },
+        'gamemode' -> {
+            'type' -> 'term',
+            'options' -> ['survival', 'creative', 'adventure', 'spectator', 's', 'c', 'a', 'sp'],
+            'case_sensitive' -> false
+        }
+    }
+};
+
+
+_isBot(player) -> (
+    return(player~'player_type' == 'fake');
+);
+
+
+_normalizeGamemode(gamemode) -> (
+    gamemode = lower(gamemode);
+    return(if(
+        gamemode == 's' || gamemode == 'survival', 'survival',
+        gamemode == 'c' || gamemode == 'creative', 'creative', 
+        gamemode == 'a' || gamemode == 'adventure', 'adventure',
+        gamemode == 'sp' || gamemode == 'spectator', 'spectator',
+        null
+    ));
+);
+
+
+_getGamemodeDisplayName(gamemode) -> (
+    return(if(
+        gamemode == 'survival', 'Survival',
+        gamemode == 'creative', 'Creative',
+        gamemode == 'adventure', 'Adventure', 
+        gamemode == 'spectator', 'Spectator',
+        gamemode
+    ));
+);
+
+
+changeBotGamemode(bot_name, gamemode) -> (
+    
+    bot = player(bot_name);
+    
+    
+    if(!bot, 
+        print(format('r Error: Player "' + bot_name + '" not found'));
+        return()
+    );
+    
+    
+    if(!_isBot(bot),
+        print(format('r Error: "' + bot_name + '" is not a carpet bot'));
+        return()
+    );
+    
+    
+    normalized_gamemode = _normalizeGamemode(gamemode);
+    if(!normalized_gamemode,
+        print(format('r Error: Invalid gamemode "' + gamemode + '"'));
+        print(format('g Valid gamemodes: survival (s), creative (c), adventure (a), spectator (sp)'));
+        return()
+    );
+    
+    
+    current_gamemode = bot~'gamemode';
+    
+    
+    if(current_gamemode == normalized_gamemode,
+        print(format('y Bot "' + bot_name + '" is already in ' + _getGamemodeDisplayName(normalized_gamemode) + ' mode'));
+        return()
+    );
+    
+    run(str('gamemode %s %s', normalized_gamemode, bot_name));
+    
+    
+    print(format(
+        'g Successfully changed gamemode of bot "' + bot_name + '" from ' + 
+        _getGamemodeDisplayName(current_gamemode) + ' to ' + 
+        _getGamemodeDisplayName(normalized_gamemode)
+    ));
+    
+    
+    logger(str('[BotGamemode] %s changed bot %s gamemode: %s -> %s', 
+        player(), bot_name, current_gamemode, normalized_gamemode));
+);
+
+
+__on_start() -> (
+    print(format('g Bot Gamemode Changer loaded successfully'));
+    print(format('g Usage: /gamemode <bot_name> <gamemode>'));
+    print(format('g Valid gamemodes: survival (s), creative (c), adventure (a), spectator (sp)'));
+);`;
+            }
 
             const blob = new Blob([scriptContent], { type: 'text/plain' });
             const url = window.URL.createObjectURL(blob);
@@ -426,7 +674,16 @@ __on_start() -> (
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
+            
+            closeScriptPopup();
         }
+
+        // Close popup when clicking outside
+        document.getElementById('scriptPopup').addEventListener('click', (e) => {
+            if (e.target.classList.contains('popup-overlay')) {
+                closeScriptPopup();
+            }
+        });
 
         document.querySelector('.scroll-indicator').addEventListener('click', () => {
             document.getElementById('content').scrollIntoView({
