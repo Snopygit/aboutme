@@ -257,6 +257,30 @@
             border: 1px solid rgba(196, 143, 131, 0.2);
         }
 
+        .language-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(26, 26, 26, 0.9);
+            border: 1px solid rgba(196, 143, 131, 0.3);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            color: #c48f83;
+            font-size: 0.9rem;
+            font-weight: 400;
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .language-toggle:hover {
+            background: rgba(26, 26, 26, 1);
+            border-color: #c48f83;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(196, 143, 131, 0.2);
+        }
+
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -437,8 +461,7 @@
                 <h3 class="popup-title">Script Download</h3>
                 <div class="popup-image"></div>
                 <p class="popup-description">
-                    Wähle die gewünschte Sprache für das Minecraft Script aus:<br>
-                    <small>Select the desired language for the Minecraft script:</small>
+                    Wähle die gewünschte Sprache für das Minecraft Script aus:
                 </p>
             </div>
             <div class="popup-buttons">
@@ -447,6 +470,8 @@
             </div>
         </div>
     </div>
+
+    <button class="language-toggle" onclick="toggleLanguage()" id="langToggle">Switch Language</button>
 
     <section class="start-screen" id="start">
         <h1>Snopy</h1>
@@ -463,15 +488,12 @@
             <div class="sections-grid">
                 <div class="dev-section">
                     <h2 class="dev-title">Skript</h2>
-                    <p class="subtitle">Script</p>
                     <div class="dev-card" onclick="showScriptPopup()">
                         <div class="card-content">
                             <div class="script-placeholder-content"></div>
                             <h3 class="card-title">Eigenes Script</h3>
                             <p class="card-description">
                                 Eigenes Minecraft Script was Spielern erlaubt den gamemode von Carpet Bots ohne OP zu verändern.
-                                <br><br>
-                                <small>Own Minecraft script that allows players to change the gamemode of Carpet Bots without OP.</small>
                             </p>
                         </div>
                     </div>
@@ -479,15 +501,12 @@
                 
                 <div class="dev-section">
                     <h2 class="dev-title">In Arbeit</h2>
-                    <p class="subtitle">In Progress</p>
                     <div class="dev-card">
                         <div class="card-content">
                             <div class="takeout-placeholder-content"></div>
                             <h3 class="card-title">ABetterTakeItOut</h3>
                             <p class="card-description">
                                 Eine verbesserte Version von der TakeItOut Mod, die die Qualität verbessert, Bugs fixed und sie generell verbessert.
-                                <br><br>
-                                <small>An improved version of the TakeItOut mod that improves quality, fixes bugs and generally improves it.</small>
                             </p>
                         </div>
                     </div>
@@ -497,6 +516,64 @@
     </section>
 
     <script>
+        let currentLanguage = 'de';
+
+        const translations = {
+            de: {
+                scriptTitle: 'Skript',
+                workTitle: 'In Arbeit',
+                scriptCardTitle: 'Eigenes Script',
+                scriptCardDesc: 'Eigenes Minecraft Script was Spielern erlaubt den gamemode von Carpet Bots ohne OP zu verändern.',
+                workCardTitle: 'ABetterTakeItOut',
+                workCardDesc: 'Eine verbesserte Version von der TakeItOut Mod, die die Qualität verbessert, Bugs fixed und sie generell verbessert.',
+                popupTitle: 'Script Download',
+                popupDesc: 'Wähle die gewünschte Sprache für das Minecraft Script aus:',
+                langToggle: 'Switch Language'
+            },
+            en: {
+                scriptTitle: 'Script',
+                workTitle: 'In Progress',
+                scriptCardTitle: 'Own Script',
+                scriptCardDesc: 'Own Minecraft script that allows players to change the gamemode of Carpet Bots without OP.',
+                workCardTitle: 'ABetterTakeItOut',
+                workCardDesc: 'An improved version of the TakeItOut mod that improves quality, fixes bugs and generally improves it.',
+                popupTitle: 'Script Download',
+                popupDesc: 'Select the desired language for the Minecraft script:',
+                langToggle: 'Sprache wechseln'
+            }
+        };
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'de' ? 'en' : 'de';
+            updateContent();
+        }
+
+        function updateContent() {
+            const t = translations[currentLanguage];
+            
+            // Update titles
+            document.querySelector('.dev-section:first-child .dev-title').textContent = t.scriptTitle;
+            document.querySelector('.dev-section:last-child .dev-title').textContent = t.workTitle;
+            
+            // Update card content
+            document.querySelector('.script-placeholder-content').parentElement.querySelector('.card-title').textContent = t.scriptCardTitle;
+            document.querySelector('.takeout-placeholder-content').parentElement.querySelector('.card-title').textContent = t.workCardTitle;
+            
+            // Update descriptions
+            const scriptDesc = document.querySelector('.script-placeholder-content').parentElement.querySelector('.card-description');
+            const workDesc = document.querySelector('.takeout-placeholder-content').parentElement.querySelector('.card-description');
+            
+            scriptDesc.textContent = t.scriptCardDesc;
+            workDesc.textContent = t.workCardDesc;
+            
+            // Update popup
+            document.querySelector('.popup-title').textContent = t.popupTitle;
+            document.querySelector('.popup-description').textContent = t.popupDesc;
+            
+            // Update language toggle button
+            document.getElementById('langToggle').textContent = t.langToggle;
+        }
+
         function showScriptPopup() {
             const popup = document.getElementById('scriptPopup');
             popup.classList.add('active');
