@@ -635,6 +635,25 @@
             popup.classList.remove('active');
         }
 
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(confetti);
+                
+                confetti.animate([
+                    { transform: 'translateY(-100px) rotate(0deg)', opacity: 1 },
+                    { transform: 'translateY(100vh) rotate(360deg)', opacity: 0 }
+                ], {
+                    duration: Math.random() * 3000 + 2000,
+                    easing: 'linear'
+                }).onfinish = () => confetti.remove();
+            }
+        }
+
         function downloadBotScript(language) {
             let scriptContent = '';
             
