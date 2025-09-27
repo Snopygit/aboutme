@@ -572,7 +572,7 @@
                 popupTitle: 'Skript Download',
                 popupDesc: 'Wähle die gewünschte Sprache für das Minecraft Script aus:',
                 thankYouTitle: 'Danke',
-                thankYouDesc: 'Danke für den Download, um das Skript zu aktivieren musst du es in deinen \'Scripts\' Ordner in deiner Welt oder Server kopieren.',
+                thankYouDesc: 'Danke für den Download! Um das Skript zu aktivieren, musst du es in den Ordner \'scripts\' deiner Welt oder deines Servers kopieren.',
                 usageText: 'Verwendung:',
                 usageCommand: '/bot gamemode [Bot-name] [Spielmodus]',
                 langToggle: 'Switch Language'
@@ -587,7 +587,7 @@
                 popupTitle: 'Script Download',
                 popupDesc: 'Select the desired language for the Minecraft script:',
                 thankYouTitle: 'Thank you',
-                thankYouDesc: 'Thank you for installing my script, to activate it you need to copy it into your \'scripts\' folder in your server or singleplayer world',
+                thankYouDesc: 'Thank you for installing my script! To activate it, copy it into the \'scripts\' folder of your server or singleplayer world.',
                 usageText: 'Usage:',
                 usageCommand: '/bot gamemode [Bot-name] [Gamemode]',
                 langToggle: 'Sprache wechseln'
@@ -602,26 +602,26 @@
         function updateContent() {
             const t = translations[currentLanguage];
             
-            // Update titles
+            
             document.querySelector('.dev-section:first-child .dev-title').textContent = t.scriptTitle;
             document.querySelector('.dev-section:last-child .dev-title').textContent = t.workTitle;
             
-            // Update card content
+           
             document.querySelector('.script-placeholder-content').parentElement.querySelector('.card-title').textContent = t.scriptCardTitle;
             document.querySelector('.takeout-placeholder-content').parentElement.querySelector('.card-title').textContent = t.workCardTitle;
             
-            // Update descriptions
+           
             const scriptDesc = document.querySelector('.script-placeholder-content').parentElement.querySelector('.card-description');
             const workDesc = document.querySelector('.takeout-placeholder-content').parentElement.querySelector('.card-description');
             
             scriptDesc.textContent = t.scriptCardDesc;
             workDesc.textContent = t.workCardDesc;
             
-            // Update popup
+            
             document.querySelector('.popup-title').textContent = t.popupTitle;
             document.querySelector('.popup-description').textContent = t.popupDesc;
             
-            // Update language toggle button
+           
             document.getElementById('langToggle').textContent = t.langToggle;
         }
 
@@ -640,17 +640,38 @@
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
                 confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.animationDelay = Math.random() * 3 + 's';
-                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.top = '-10px';
+                confetti.style.position = 'fixed';
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                
+                if (i % 3 === 0) {
+                    confetti.style.backgroundColor = '#c48f83';
+                } else if (i % 3 === 1) {
+                    confetti.style.backgroundColor = '#ffffff';
+                } else {
+                    confetti.style.backgroundColor = '#ffd700';
+                }
+                
                 document.body.appendChild(confetti);
                 
                 confetti.animate([
-                    { transform: 'translateY(-100px) rotate(0deg)', opacity: 1 },
-                    { transform: 'translateY(100vh) rotate(360deg)', opacity: 0 }
+                    { 
+                        transform: 'translateY(-10px) rotate(0deg)', 
+                        opacity: 1 
+                    },
+                    { 
+                        transform: 'translateY(' + (window.innerHeight + 50) + 'px) rotate(360deg)', 
+                        opacity: 0 
+                    }
                 ], {
                     duration: Math.random() * 3000 + 2000,
                     easing: 'linear'
-                }).onfinish = () => confetti.remove();
+                }).onfinish = () => {
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
+                    }
+                };
             }
         }
 
@@ -901,7 +922,7 @@ __on_start() -> (
             closeScriptPopup();
         }
 
-        // Close popup when clicking outside
+        
         document.getElementById('scriptPopup').addEventListener('click', (e) => {
             if (e.target.classList.contains('popup-overlay')) {
                 closeScriptPopup();
