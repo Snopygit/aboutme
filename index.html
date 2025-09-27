@@ -417,6 +417,34 @@
             border-color: #c48f83;
             transform: translateY(-2px);
         }
+
+        .usage-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(196, 143, 131, 0.2);
+            border-radius: 8px;
+            padding: 0.8rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #ffffff;
+            margin-top: 1rem;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #c48f83;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .confetti:nth-child(odd) {
+            background: #ffffff;
+        }
+
+        .confetti:nth-child(3n) {
+            background: #ffd700;
+        }
         
         @media (max-width: 768px) {
             .start-screen h1 {
@@ -473,6 +501,21 @@
 
     <button class="language-toggle" onclick="toggleLanguage()" id="langToggle">Switch Language</button>
 
+    <div class="popup-overlay" id="thankYouPopup">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closeThankYouPopup()">×</button>
+            <div class="popup-header">
+                <h3 class="popup-title" id="thankYouTitle">Danke</h3>
+                <div class="popup-image"></div>
+                <p class="popup-description" id="thankYouDesc">
+                    Danke für den Download, um das Skript zu aktivieren musst du es in deinen 'Scripts' Ordner in deiner Welt oder Server kopieren.
+                </p>
+                <p style="font-size: 0.9rem; color: #999999; margin-top: 1rem;">Verwendung:</p>
+                <div class="usage-box" id="usageBox">/bot gamemode [Bot-name] [Spielmodus]</div>
+            </div>
+        </div>
+    </div>
+
     <section class="start-screen" id="start">
         <h1>Snopy</h1>
         <div class="profile-placeholder-start glass-effect">
@@ -526,8 +569,12 @@
                 scriptCardDesc: 'Eigenes Minecraft Script was Spielern erlaubt den gamemode von Carpet Bots ohne OP zu verändern.',
                 workCardTitle: 'ABetterTakeItOut',
                 workCardDesc: 'Eine verbesserte Version von der TakeItOut Mod, die die Qualität verbessert, Bugs fixed und sie generell verbessert.',
-                popupTitle: 'Script Download',
+                popupTitle: 'Skript Download',
                 popupDesc: 'Wähle die gewünschte Sprache für das Minecraft Script aus:',
+                thankYouTitle: 'Danke',
+                thankYouDesc: 'Danke für den Download, um das Skript zu aktivieren musst du es in deinen \'Scripts\' Ordner in deiner Welt oder Server kopieren.',
+                usageText: 'Verwendung:',
+                usageCommand: '/bot gamemode [Bot-name] [Spielmodus]',
                 langToggle: 'Switch Language'
             },
             en: {
@@ -539,6 +586,10 @@
                 workCardDesc: 'An improved version of the TakeItOut mod that improves quality, fixes bugs and generally improves it.',
                 popupTitle: 'Script Download',
                 popupDesc: 'Select the desired language for the Minecraft script:',
+                thankYouTitle: 'Thanks',
+                thankYouDesc: 'Thanks for installing my script, to activate it you need to copy it into your \'scripts\' folder in your server or singleplayer world',
+                usageText: 'Usage:',
+                usageCommand: '/bot gamemode [Bot-name] [Gamemode]',
                 langToggle: 'Sprache wechseln'
             }
         };
