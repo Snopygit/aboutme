@@ -493,8 +493,8 @@
                 </p>
             </div>
             <div class="popup-buttons">
-                <button class="popup-button" onclick="downloadBotScript('german')">Deutsch</button>
-                <button class="popup-button" onclick="downloadBotScript('english')">English</button>
+                <button class="popup-button" onclick="handleDownload('german')">Deutsch</button>
+                <button class="popup-button" onclick="handleDownload('english')">English</button>
             </div>
         </div>
     </div>
@@ -586,8 +586,8 @@
                 workCardDesc: 'An improved version of the TakeItOut mod that improves quality, fixes bugs and generally improves it.',
                 popupTitle: 'Script Download',
                 popupDesc: 'Select the desired language for the Minecraft script:',
-                thankYouTitle: 'Thanks',
-                thankYouDesc: 'Thanks for installing my script, to activate it you need to copy it into your \'scripts\' folder in your server or singleplayer world',
+                thankYouTitle: 'Thank you',
+                thankYouDesc: 'Thank you for installing my script, to activate it you need to copy it into your \'scripts\' folder in your server or singleplayer world',
                 usageText: 'Usage:',
                 usageCommand: '/bot gamemode [Bot-name] [Gamemode]',
                 langToggle: 'Sprache wechseln'
@@ -653,6 +653,42 @@
                 }).onfinish = () => confetti.remove();
             }
         }
+
+        function handleDownload(language) {
+            downloadBotScript(language);
+            closeScriptPopup();
+            setTimeout(function() {
+                openThankYouPopup();
+            }, 100);
+        }
+
+        function openThankYouPopup() {
+            const t = translations[currentLanguage];
+            document.getElementById('thankYouTitle').textContent = t.thankYouTitle;
+            document.getElementById('thankYouDesc').textContent = t.thankYouDesc;
+            
+            const usageLabel = document.querySelector('#thankYouPopup p[id="usageLabel"]');
+            if (usageLabel) {
+                usageLabel.textContent = t.usageText;
+            }
+            
+            document.getElementById('usageBox').textContent = t.usageCommand;
+            
+            document.getElementById('thankYouPopup').classList.add('active');
+            createConfetti();
+        }
+
+        function closeThankYouPopup() {
+            document.getElementById('thankYouPopup').classList.remove('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('thankYouPopup').addEventListener('click', function(e) {
+                if (e.target.id === 'thankYouPopup') {
+                    closeThankYouPopup();
+                }
+            });
+        });
 
         function downloadBotScript(language) {
             let scriptContent = '';
