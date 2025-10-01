@@ -354,6 +354,7 @@
             align-items: center;
             justify-content: center;
             transition: background-color 0.3s ease;
+            z-index: 2;
         }
 
         .popup-close:hover {
@@ -384,12 +385,24 @@
             margin: 0 auto 2rem;
         }
 
+        .popup-image-takeout {
+            width: 200px;
+            height: 200px;
+            border-radius: 15px;
+            background-image: url('img/TakeItOut.png');
+            background-size: cover;
+            background-position: center;
+            margin: 0 auto 2rem;
+        }
+
         .popup-description {
             font-size: 1.1rem;
             color: #c48f83;
             text-align: center;
             margin-bottom: 2rem;
             line-height: 1.6;
+            position: relative;
+            z-index: 2;
         }
 
         .popup-buttons {
@@ -499,6 +512,19 @@
         </div>
     </div>
 
+    <div class="popup-overlay" id="takeoutPopup">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closeTakeoutPopup()">×</button>
+            <div class="popup-header">
+                <h3 class="popup-title" id="takeoutPopupTitle">In Arbeit</h3>
+                <div class="popup-image-takeout"></div>
+                <p class="popup-description" id="takeoutPopupDesc">
+                    Hinweis: Dies ist ein Projekt an dem ich gelegentlich in meiner Freizeit arbeite, daher wird es lange dauern bis es fertig wird und rausgebracht wird!
+                </p>
+            </div>
+        </div>
+    </div>
+
     <button class="language-toggle" onclick="toggleLanguage()" id="langToggle">Switch Language</button>
 
     <div class="popup-overlay" id="thankYouPopup">
@@ -510,7 +536,7 @@
                 <p class="popup-description" id="thankYouDesc">
                     Danke für den Download, um das Skript zu aktivieren musst du es in deinen 'Scripts' Ordner in deiner Welt oder Server kopieren.
                 </p>
-                <p style="font-size: 0.9rem; color: #999999; margin-top: 1rem;">Verwendung:</p>
+                <p style="font-size: 0.9rem; color: #999999; margin-top: 1rem; position: relative; z-index: 2;">Verwendung:</p>
                 <div class="usage-box" id="usageBox">/bot gamemode [Bot-name] [Spielmodus]</div>
             </div>
         </div>
@@ -544,7 +570,7 @@
                 
                 <div class="dev-section">
                     <h2 class="dev-title">In Arbeit</h2>
-                    <div class="dev-card">
+                    <div class="dev-card" onclick="showTakeoutPopup()">
                         <div class="card-content">
                             <div class="takeout-placeholder-content"></div>
                             <h3 class="card-title">ABetterTakeItOut</h3>
@@ -571,6 +597,8 @@
                 workCardDesc: 'Eine verbesserte Version von der TakeItOut Mod, die die Qualität verbessert, Bugs fixed und sie generell verbessert.',
                 popupTitle: 'Skript Download',
                 popupDesc: 'Wähle die gewünschte Sprache für das Minecraft Script aus:',
+                takeoutPopupTitle: 'In Arbeit',
+                takeoutPopupDesc: 'Hinweis: Dies ist ein Projekt an dem ich gelegentlich in meiner Freizeit arbeite, daher wird es lange dauern bis es fertig wird und rausgebracht wird!',
                 thankYouTitle: 'Danke',
                 thankYouDesc: 'Danke für den Download! Um das Skript zu aktivieren, musst du es in den Ordner \'scripts\' deiner Welt oder deines Servers kopieren.',
                 usageText: 'Verwendung:',
@@ -586,6 +614,8 @@
                 workCardDesc: 'An improved version of the TakeItOut mod that improves quality, fixes bugs and generally improves it.',
                 popupTitle: 'Script Download',
                 popupDesc: 'Select the desired language for the Minecraft script:',
+                takeoutPopupTitle: 'In Progress',
+                takeoutPopupDesc: 'Note: This is a project I occasionally work on in my free time, so it will take a long time for me to finish and release it!',
                 thankYouTitle: 'Thank you',
                 thankYouDesc: 'Thank you for installing my script! To activate it, copy it into the \'scripts\' folder of your server or singleplayer world.',
                 usageText: 'Usage:',
@@ -602,26 +632,24 @@
         function updateContent() {
             const t = translations[currentLanguage];
             
-            
             document.querySelector('.dev-section:first-child .dev-title').textContent = t.scriptTitle;
             document.querySelector('.dev-section:last-child .dev-title').textContent = t.workTitle;
             
-           
             document.querySelector('.script-placeholder-content').parentElement.querySelector('.card-title').textContent = t.scriptCardTitle;
             document.querySelector('.takeout-placeholder-content').parentElement.querySelector('.card-title').textContent = t.workCardTitle;
             
-           
             const scriptDesc = document.querySelector('.script-placeholder-content').parentElement.querySelector('.card-description');
             const workDesc = document.querySelector('.takeout-placeholder-content').parentElement.querySelector('.card-description');
             
             scriptDesc.textContent = t.scriptCardDesc;
             workDesc.textContent = t.workCardDesc;
             
-            
             document.querySelector('.popup-title').textContent = t.popupTitle;
             document.querySelector('.popup-description').textContent = t.popupDesc;
             
-           
+            document.getElementById('takeoutPopupTitle').textContent = t.takeoutPopupTitle;
+            document.getElementById('takeoutPopupDesc').textContent = t.takeoutPopupDesc;
+            
             document.getElementById('langToggle').textContent = t.langToggle;
         }
 
@@ -632,6 +660,16 @@
 
         function closeScriptPopup() {
             const popup = document.getElementById('scriptPopup');
+            popup.classList.remove('active');
+        }
+
+        function showTakeoutPopup() {
+            const popup = document.getElementById('takeoutPopup');
+            popup.classList.add('active');
+        }
+
+        function closeTakeoutPopup() {
+            const popup = document.getElementById('takeoutPopup');
             popup.classList.remove('active');
         }
 
@@ -707,6 +745,12 @@
             document.getElementById('thankYouPopup').addEventListener('click', function(e) {
                 if (e.target.id === 'thankYouPopup') {
                     closeThankYouPopup();
+                }
+            });
+
+            document.getElementById('takeoutPopup').addEventListener('click', function(e) {
+                if (e.target.id === 'takeoutPopup') {
+                    closeTakeoutPopup();
                 }
             });
         });
@@ -825,11 +869,9 @@ __on_start() -> (
     }
 };
 
-
 _isBot(player) -> (
     return(player~'player_type' == 'fake');
 );
-
 
 _normalizeGamemode(gamemode) -> (
     gamemode = lower(gamemode);
@@ -842,7 +884,6 @@ _normalizeGamemode(gamemode) -> (
     ));
 );
 
-
 _getGamemodeDisplayName(gamemode) -> (
     return(if(
         gamemode == 'survival', 'Survival',
@@ -853,23 +894,18 @@ _getGamemodeDisplayName(gamemode) -> (
     ));
 );
 
-
 changeBotGamemode(bot_name, gamemode) -> (
-    
     bot = player(bot_name);
-    
     
     if(!bot, 
         print(format('r Error: Player "' + bot_name + '" not found'));
         return()
     );
     
-    
     if(!_isBot(bot),
         print(format('r Error: "' + bot_name + '" is not a carpet bot'));
         return()
     );
-    
     
     normalized_gamemode = _normalizeGamemode(gamemode);
     if(!normalized_gamemode,
@@ -878,9 +914,7 @@ changeBotGamemode(bot_name, gamemode) -> (
         return()
     );
     
-    
     current_gamemode = bot~'gamemode';
-    
     
     if(current_gamemode == normalized_gamemode,
         print(format('y Bot "' + bot_name + '" is already in ' + _getGamemodeDisplayName(normalized_gamemode) + ' mode'));
@@ -889,18 +923,15 @@ changeBotGamemode(bot_name, gamemode) -> (
     
     run(str('gamemode %s %s', normalized_gamemode, bot_name));
     
-    
     print(format(
         'g Successfully changed gamemode of bot "' + bot_name + '" from ' + 
         _getGamemodeDisplayName(current_gamemode) + ' to ' + 
         _getGamemodeDisplayName(normalized_gamemode)
     ));
     
-    
     logger(str('[BotGamemode] %s changed bot %s gamemode: %s -> %s', 
         player(), bot_name, current_gamemode, normalized_gamemode));
 );
-
 
 __on_start() -> (
     print(format('g Bot Gamemode Changer loaded successfully'));
@@ -918,11 +949,8 @@ __on_start() -> (
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
-            
-            closeScriptPopup();
         }
 
-        
         document.getElementById('scriptPopup').addEventListener('click', (e) => {
             if (e.target.classList.contains('popup-overlay')) {
                 closeScriptPopup();
